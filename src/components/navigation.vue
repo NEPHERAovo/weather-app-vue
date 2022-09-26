@@ -10,7 +10,7 @@
 
             <div class="flex gap-3 flex-1 justify-end">
                 <i class="fa-solid fa-circle-info text-xl hover:text-weather-tertiary duration-150 cursor-pointer"
-                    @click="toggle_show"></i>
+                    @click="toggleShow"></i>
                 <i class="fa-solid fa-plus text-xl hover:text-weather-tertiary duration-150 cursor-pointer"
                     @click="addCity" v-if="route.query.preview"></i>
                 <i class="fa-solid fa-palette text-xl hover:text-weather-tertiary duration-150 cursor-pointer"
