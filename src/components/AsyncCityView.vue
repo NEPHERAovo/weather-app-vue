@@ -42,7 +42,7 @@
         <div class="max-w-screen-md w-full py-8">
             <div class="mx-8 text-white">
                 <h2 class="mb-4">每小时天气</h2>
-                <div class="flex gap-10 overflow-hidden">
+                <div class="hide-scrollbar flex gap-10 overflow-auto">
                     <div v-for="hourData in weatherData.hourly" :key="hourData.dt"
                         class="flex flex-col gap-4 items-center">
                         <p class="whitespace-nowrap text-md">
@@ -139,3 +139,9 @@ const removeCity = () => {
     router.push("/");
 }
 </script>
+
+<style>
+.hide-scrollbar::-webkit-scrollbar {
+    width: 0px;
+}
+</style>

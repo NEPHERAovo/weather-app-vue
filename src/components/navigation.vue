@@ -4,7 +4,7 @@
             <RouterLink :to="{name:'home'}">
                 <div class="flex items-center gap-3">
                     <img :src="'http://openweathermap.org/img/wn/02d@2x.png'" class="w-8 h-8 transform scale-[1.8]" />
-                    <p class="text-2xl">~天气~</p>
+                    <p class="text-2xl">~ 天气 ~</p>
                 </div>
             </RouterLink>
 
