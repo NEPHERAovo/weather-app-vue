@@ -70,7 +70,7 @@
         <hr class="border-white border-opacity-10 border w-full" />
 
         <div class="max-w-screen-md w-full py-8">
-            <div class="mx-8 ml-2 text-white">
+            <div class="mx-14 ml-6 text-white">
                 <!-- <h2 class="mb-4">七天天气预报</h2> -->
                 <div v-for="(day,index) in weatherData.daily" class="flex">
                     <div class="flex flex-1 items-center">
