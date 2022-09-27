@@ -2,12 +2,12 @@
   <main class="container text-white">
     <div class="pt-4 mb-8 relative">
       <input type="text" v-model="searchQuery" @input="getSearchResults" placeholder="搜索城市"
-        class="py-2 px-1 w-full bg-transparent placeholder-color-white placeholder-opacity-25 border-b border-weather-secondary focus:outline-none focus:shadow-[0px_1px_0_0_#004E71]" />
-      <ul class="absolute bg-weather-secondary text-white w-full shadow-md py-2 px-1" v-if="mapboxSearchResults">
+        class="py-2 px-1 w-full bg-transparent placeholder-color-white placeholder-opacity-25 border-b border-weather-secondary focus:outline-none focus:shadow-[0px_1px_0_0_#004E71] hover:shadow-[0px_1px_0_0_#004E71]" />
+      <ul class="absolute z-10 bg-weather-secondary text-white w-full shadow-md py-2 px-1" v-if="mapboxSearchResults">
         <p v-if="mapboxSearchResults.length === 0">没有搜到结果，请重试。</p>
         <div v-else>
-          <li v-for="searchResult in mapboxSearchResults" :key="searchResult.id" class="py-2 cursor-pointer"
-            @click="previewCity(searchResult)">
+          <li v-for="searchResult in mapboxSearchResults" :key="searchResult.id"
+            class="py-2 cursor-pointer hover:bg-weather-tertiary" @click="previewCity(searchResult)">
             {{searchResult.place_name}}</li>
         </div>
       </ul>

@@ -1,5 +1,5 @@
 <template>
-    <div v-for="city in savedCities" :key="city.id">
+    <div class="hover:scale-[1.02] duration-300" v-for="city in savedCities" :key="city.id">
         <CityCard :city="city" @click="goToCityView(city)" />
     </div>
     <div v-if="savedCities.length === 0" class="text-white p-3 bg-weather-secondary w-full text-center">
