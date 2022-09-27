@@ -2,7 +2,9 @@
     <div class="flex flex-col flex-1 items-center">
         <div v-if="route.query.preview" class="text-white p-3 bg-weather-secondary
         w-full text-center">
-            <p>正在预览该城市的天气，点击加号按钮来追踪该城市天气。</p>
+            <p>正在预览该城市的天气，点击<i
+                    class="fa-solid fa-plus px-2 text-md hover:text-weather-tertiary duration-150 cursor-pointer"
+                    @click="addCity" v-if="route.query.preview"></i>来追踪该城市天气。</p>
         </div>
 
         <div class="flex flex-col items-center text-white py-6">
@@ -26,7 +28,7 @@
             </p>
             <div class="text-center">
                 <p>
-                    体感温度 {{Math.round((weatherData.current.feels_like-32)/1.8)}}&degC
+                    体感 {{Math.round((weatherData.current.feels_like-32)/1.8)}}&degC
                 </p>
                 <p class="capitalize">
                     {{weatherData.current.weather[0].description}}
@@ -41,7 +43,7 @@
 
         <div class="max-w-screen-md w-full py-8">
             <div class="mx-8 text-white">
-                <h2 class="mb-4">每小时天气</h2>
+                <!-- <h2 class="mb-4">每小时天气</h2> -->
                 <div class="hide-scrollbar flex gap-10 overflow-auto">
                     <div v-for="hourData in weatherData.hourly" :key="hourData.dt"
                         class="flex flex-col gap-4 items-center">
@@ -68,40 +70,49 @@
         <hr class="border-white border-opacity-10 border w-full" />
 
         <div class="max-w-screen-md w-full py-8">
-            <div class="mx-8 text-white">
-                <h2 class="mb-4">七天天气预报</h2>
-                <div v-for="day in weatherData.daily" :key="day.dt" class="flex items-center">
-                    <p class="flex-1">
-                        {{
-                        new Date(day.dt * 1000).toLocaleDateString("zh-CN", {weekday:"long",})
-                        }}
-                    </p>
-                    <div class="flex flex-row items-center">
-                        <img class="w-[50px] h-[50px] object-cover mx-4" :src="
+            <div class="mx-8 ml-2 text-white">
+                <!-- <h2 class="mb-4">七天天气预报</h2> -->
+                <div v-for="(day,index) in weatherData.daily" class="flex">
+                    <div class="flex flex-1 items-center">
+                        <img class="w-[50px] h-[50px] object-cover mr-4" :src="
                           `http://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png`
                         " />
+                        <p v-if="index==0">
+                            今天 &nbsp· &nbsp
+                        </p>
+                        <p v-if="index==1">明天 &nbsp· &nbsp</p>
+                        <p v-if="index>1">
+                            {{
+                            new Date(day.dt * 1000).toLocaleDateString("zh-CN", {weekday:"short",})
+                            }} &nbsp· &nbsp
+                        </p>
+                        <span class="w-[70px]">{{day.weather[0].description}}</span>
+                    </div>
+                    <div class="flex flex-row items-center">
+
                         <div class="flex gap-2 flex-1 justify-end">
                             <p>{{Math.round((day.temp.min-32)/1.8)}}&degC</p>
                             <p>-</p>
                             <p>{{Math.round((day.temp.max-32)/1.8)}}&degC</p>
                         </div>
-                        <span class="w-[70px] ml-4">{{day.weather[0].description}}</span>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div v-if="!route.query.preview"
-            class="flex items-center gap-2 py-6 text-white cursor-pointer duration-150 hover:text-red-500"
+        <hr class="border-white border-opacity-10 border w-full" />
+
+        <div v-if="!route.query.preview" class="flex py-8 text-white cursor-pointer duration-150 hover:text-red-500"
             @click="removeCity">
-            <i class="fa-solid fa-trash"></i>
-            <p>移除该城市</p>
+            <i class="fa-solid fa-trash -can"></i>
         </div>
     </div>
 </template>
 
 <script setup>
+import { uid } from 'uid';
 import axios from "axios";
+import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 const route = useRoute();
 const getWeatherData = async () => {
@@ -138,6 +149,37 @@ const removeCity = () => {
     localStorage.setItem("savedCities", JSON.stringify(updatedCities));
     router.push("/");
 }
+
+// 预览城市加入城市列表
+const savedCities = ref([])
+const addCity = () => {
+    // 加入localStorage
+    if (localStorage.getItem('savedCities')) {
+        savedCities.value = JSON.parse(localStorage.getItem('savedCities'))
+    }
+
+    // 生成一个新的城市对象
+    const locationObject = {
+        id: uid(),
+        state: route.params.state,
+        city: route.params.city,
+        coords: {
+            latitude: route.query.latitude,
+            longitude: route.query.longitude
+        }
+    }
+
+    // 城市对象加入savedCities
+    savedCities.value.push(locationObject);
+    localStorage.setItem('savedCities', JSON.stringify(savedCities.value));
+
+    // 去除预览提示
+    let query = Object.assign({}, route.query);
+    delete query.preview;
+    query.id = locationObject.id;
+    router.replace({ query });
+};
+
 </script>
 
 <style>

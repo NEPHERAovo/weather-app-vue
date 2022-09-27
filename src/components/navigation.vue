@@ -11,8 +11,6 @@
             <div class="flex gap-3 flex-1 justify-end">
                 <i class="fa-solid fa-circle-info text-xl hover:text-weather-tertiary duration-150 cursor-pointer"
                     @click="toggleShow"></i>
-                <i class="fa-solid fa-plus text-xl hover:text-weather-tertiary duration-150 cursor-pointer"
-                    @click="addCity" v-if="route.query.preview"></i>
                 <i class="fa-solid fa-palette text-xl hover:text-weather-tertiary duration-150 cursor-pointer"
                     @click="changeTheme"></i>
             </div>
@@ -31,7 +29,6 @@
 </template>
 
 <script setup>
-import { uid } from 'uid';
 import { ref } from "vue";
 import { RouterLink, useRoute, useRouter } from "vue-router";
 import Modal from "./modal.vue";
@@ -40,38 +37,6 @@ import Modal from "./modal.vue";
 const show = ref(false);
 const toggleShow = () => {
     show.value = !show.value;
-};
-
-// 预览城市加入城市列表
-const router = useRouter();
-const route = useRoute();
-const savedCities = ref([])
-const addCity = () => {
-    // 加入localStorage
-    if (localStorage.getItem('savedCities')) {
-        savedCities.value = JSON.parse(localStorage.getItem('savedCities'))
-    }
-
-    // 生成一个新的城市对象
-    const locationObject = {
-        id: uid(),
-        state: route.params.state,
-        city: route.params.city,
-        coords: {
-            latitude: route.query.latitude,
-            longitude: route.query.longitude
-        }
-    }
-
-    // 城市对象加入savedCities
-    savedCities.value.push(locationObject);
-    localStorage.setItem('savedCities', JSON.stringify(savedCities.value));
-
-    // 去除预览提示
-    let query = Object.assign({}, route.query);
-    delete query.preview;
-    query.id = locationObject.id;
-    router.replace({ query });
 };
 
 function changeThemeViaIndex(index) {
