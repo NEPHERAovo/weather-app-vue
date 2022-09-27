@@ -34,10 +34,23 @@ import CityList from "../components/CityList.vue";
 // 搜索结果对应到预览城市，传入经纬度
 const router = useRouter();
 const previewCity = (searchResult) => {
-  const [city, state] = searchResult.place_name.split(",");
+  console.log(searchResult);
+  var city = '';
+  var state = '';
+  if (searchResult.context.length == 1) {
+    city = searchResult.text;
+    state = searchResult.context[0].text;
+  } else if (searchResult.context.length == 2) {
+    city = searchResult.text;
+    state = searchResult.context[1].text + ', ' + searchResult.context[0].text;
+  } else if (searchResult.context.length == 3) {
+    city = searchResult.context[0].text;
+    state = searchResult.context[2].text + ', ' + searchResult.context[1].text;
+  }
+  // const [city, state] = searchResult.place_name.split(",");
   router.push({
     name: "city",
-    params: { city: city, state: state.replaceAll(" ", "") }
+    params: { city: city, state: state }
     , query: {
       latitude: searchResult.center[1],
       longitude: searchResult.center[0],
@@ -59,7 +72,7 @@ const getSearchResults = () => {
   queryTimeout.value = setTimeout(async () => {
     if (searchQuery.value !== "") {
       const result = await axios.get(
-        `https://api.mapbox.com/geocoding/v5/mapbox.places/${searchQuery.value}.json?access_token=${mapboxAPIKey}&types=place`
+        `https://api.mapbox.com/geocoding/v5/mapbox.places/${searchQuery.value}.json?access_token=${mapboxAPIKey}&types=place&language=zh-Hans`
       );
       mapboxSearchResults.value = result.data.features;
       return;
