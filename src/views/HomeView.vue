@@ -36,7 +36,7 @@ import { draw_canvas } from "../assets/floatingIcons.js";
 // 搜索结果对应到预览城市，传入经纬度
 const router = useRouter();
 const previewCity = (searchResult) => {
-  console.log(searchResult);
+  // console.log(searchResult);
   var city = '';
   var state = '';
   if (searchResult.context.length == 1) {
@@ -50,15 +50,31 @@ const previewCity = (searchResult) => {
     state = searchResult.context[2].text + ', ' + searchResult.context[1].text;
   }
   // const [city, state] = searchResult.place_name.split(",");
-  router.push({
-    name: "city",
-    params: { city: city, state: state }
-    , query: {
-      latitude: searchResult.center[1],
-      longitude: searchResult.center[0],
-      preview: true,
+  let savedCities = JSON.parse(localStorage.getItem('savedCities'));
+  if (city) {
+    for (let x in savedCities) {
+      if (city == savedCities[x].city && state == savedCities[x].state) {
+        router.push({
+          name: "city",
+          params: { city: city, state: state },
+          query: {
+            latitude: searchResult.center[1],
+            longitude: searchResult.center[0]
+          }
+        });
+        return;
+      }
     }
-  });
+    router.push({
+      name: "city",
+      params: { city: city, state: state },
+      query: {
+        latitude: searchResult.center[1],
+        longitude: searchResult.center[0],
+        preview: true,
+      }
+    });
+  }
 };
 
 const mapboxAPIKey =

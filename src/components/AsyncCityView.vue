@@ -111,7 +111,6 @@
 </template>
 
 <script setup>
-import { uid } from 'uid';
 import axios from "axios";
 import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
@@ -183,7 +182,6 @@ const addCity = () => {
 
     // 生成一个新的城市对象
     const locationObject = {
-        id: uid(),
         state: route.params.state,
         city: route.params.city,
         coords: {
@@ -199,7 +197,6 @@ const addCity = () => {
     // 去除预览提示
     let query = Object.assign({}, route.query);
     delete query.preview;
-    query.id = locationObject.id;
     router.replace({ query });
 };
 
