@@ -49,8 +49,9 @@
                         class="flex flex-col gap-4 items-center">
                         <p class="whitespace-nowrap text-md">
                             {{new Date(hourData.currentTime).toLocaleTimeString(
-                            "en-us",
+                            "zh-cn",
                             {
+                            hour12: true,
                             hour: "numeric",
                             }
                             )
@@ -114,6 +115,8 @@ import { uid } from 'uid';
 import axios from "axios";
 import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { draw_canvas } from '../assets/floatingIcons';
+
 const route = useRoute();
 const getWeatherData = async () => {
     try {
@@ -133,6 +136,26 @@ const getWeatherData = async () => {
             hour.currentTime =
                 utc + 1000 * weatherData.data.timezone_offset;
         });
+        let temp = weatherData.data.current.weather[0].id;
+        if (temp < 300) {
+            draw_canvas('storm');
+        } else if (temp < 400) {
+            draw_canvas('light-rain');
+        } else if (temp < 600) {
+            if (temp == 511) {
+                draw_canvas('sleet');
+            } else if (temp == 500) {
+                draw_canvas('light-rain');
+            } else {
+                draw_canvas('rain');
+            }
+        } else if (temp < 700) {
+            draw_canvas('snow')
+        } else if (temp == 800) {
+            draw_canvas('sun')
+        } else {
+            draw_canvas('haze')
+        }
         // console.log(weatherData.data);
         return weatherData.data;
     } catch (err) {

@@ -19,7 +19,7 @@ const router = createRouter({
       name: 'city',
       component: CityView,
       beforeEnter: (to, from, next) => {
-        document.title = to.params.city + ', ' + to.params.state + " | ~ 天气 ~";
+        document.title = to.params.city + '|' + to.params.state + " | ~ 天气 ~";
         next();
       }
     },

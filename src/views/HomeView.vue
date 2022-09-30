@@ -1,8 +1,9 @@
 <template>
   <main class="container text-white">
     <div class="pt-4 mb-8 relative">
+      <!-- animate-[spin_100s_linear_infinite] -->
       <input type="text" v-model="searchQuery" @input="getSearchResults" placeholder="搜索城市"
-        class="py-2 px-1 w-full bg-transparent placeholder-color-white placeholder-opacity-25 border-b border-weather-secondary focus:outline-none focus:shadow-[0px_1px_0_0_#004E71] hover:shadow-[0px_1px_0_0_#004E71]" />
+        class="z-1 py-2 px-1 w-full bg-transparent placeholder-color-white placeholder-opacity-25 border-b border-weather-secondary focus:outline-none focus:shadow-[0px_1px_0_0_#004E71] hover:shadow-[0px_1px_0_0_#004E71]" />
       <ul class="absolute z-10 bg-weather-secondary text-white w-full shadow-md py-2 px-1" v-if="mapboxSearchResults">
         <p v-if="mapboxSearchResults.length === 0">没有搜到结果，请重试。</p>
         <div v-else>
@@ -26,10 +27,11 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
 import CityList from "../components/CityList.vue";
+import { draw_canvas } from "../assets/floatingIcons.js";
 
 // 搜索结果对应到预览城市，传入经纬度
 const router = useRouter();
@@ -81,4 +83,52 @@ const getSearchResults = () => {
   }, 500);
 };
 
+onMounted(() => {
+  draw_canvas('everything');
+  // for (let i = 0; i < 2; i++) {
+  //   setTimeout(() => {
+  //     console.log('go');
+  //     var body = document.getElementById('app');
+  //     var div = document.createElement('div');
+  //     div.id = 'test' + i;
+  //     let temp = 'absolute top-' + (i * 0) + ' right  -' + (i * 1000) + ' animate-[x_13s_linear_infinite_alternate]';
+  //     div.setAttribute('class', temp);
+  //     // div.setAttribute('class', 'absolute animate-[x_13s_linear_infinite_alternate] top-[0px] left-[0px]');
+
+  //     var div2 = document.createElement('div');
+  //     div2.id = 'test2' + i;
+  //     div2.setAttribute('class', 'animate-[y_7s_linear_infinite_alternate]');
+
+  //     var canv = document.createElement("canvas");
+  //     canv.id = "test3" + i;
+  //     canv.setAttribute("class", "z-10 w-[100px] animate-[spin_10s_linear_infinite]");
+
+  //     div2.appendChild(canv);
+  //     div.appendChild(div2);
+  //     body.appendChild(div);
+
+  //     let name = 'test3' + i;
+  //     console.log(name);
+  //     skycons.add(document.getElementById(name), Skycons.PARTLY_CLOUDY_DAY);
+
+  //     skycons.play();
+  //   }, 5000 * i);
+  // }
+
+})
 </script>
+<style>
+@keyframes x {
+  100% {
+    -webkit-transform: translateX(calc(100vw - 100px));
+    transform: translate(calc(100vw - 100px));
+  }
+}
+
+@keyframes y {
+  100% {
+    -webkit-transform: translateY(calc(100vh - 100px));
+    transform: translateY(calc(100vh - 100px));
+  }
+}
+</style>
