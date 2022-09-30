@@ -13,8 +13,15 @@ export function draw_canvas(iconid) {
         ctx.save()
         //Convert degrees to radian 
         rad += offset;
-        if (rad >= 0.2 * Math.PI) {
+        if (rad >= 0.2 * Math.PI || rad <= -0.2 * Math.PI) {
             offset = 0 - offset;
+        }
+        if (transparency <= 1) {
+            transparency += 0.0009;
+            if (transparency >= 1) {
+                transparency = 1;
+            }
+            ctx.globalAlpha = transparency;
         }
         //Set the origin to the center of the image
         ctx.translate(this.x + this.size / 2, this.y + this.size / 2);
@@ -101,6 +108,9 @@ export function draw_canvas(iconid) {
     const ctx = canvas.getContext('2d');
     ctx.canvas.width = window.innerWidth;
     ctx.canvas.height = document.body.scrollHeight;
+    let transparency = 0;
+    ctx.globalAlpha = transparency;
+    ctx.clearRect(0, 0, window.innerWidth, document.body.scrollHeight);
     let offset = (Math.random() - 0.5) * 0.001 * Math.PI / 180;
     init(iconid);
     animate();
