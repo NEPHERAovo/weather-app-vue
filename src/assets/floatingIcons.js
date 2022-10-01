@@ -82,9 +82,9 @@ export function draw_canvas(iconid) {
         for (let i = 0; i < 10; i++) {
             let size;
             if (innerWidth > innerHeight) {
-                size = (Math.random() * 0.4 + 0.6) * innerWidth / 40;
+                size = (Math.random() * 0.4 + 0.6) * innerHeight / 15;
             } else {
-                size = (Math.random() * 0.4 + 0.6) * innerHeight / 25;
+                size = (Math.random() * 0.4 + 0.6) * innerWidth / 10;
             }
             let x = Math.random() * (innerWidth - size * 2);
             let y = Math.random() * (innerHeight - size * 2);
@@ -114,9 +114,16 @@ export function draw_canvas(iconid) {
     let offset = (Math.random() - 0.5) * 0.001 * Math.PI / 180;
     init(iconid);
     animate();
-    // window.addEventListener('resize', function () {
-    //   canvas.width = innerWidth;
-    //   canvas.height = innerHeight;
-    //   init();
-    // });
+    window.addEventListener('resize', function () {
+        canvas.width = innerWidth;
+        canvas.height = innerHeight;
+        // for (let i = 0; i < 10; i++) {
+        //     if (innerWidth > innerHeight) {
+        //         particleArray[i].size = (Math.random() * 0.4 + 0.6) * innerWidth / 40;
+        //     } else {
+        //         particleArray[i].size = (Math.random() * 0.4 + 0.6) * innerHeight / 25;
+        //     }
+        // }
+        // init();
+    });
 }

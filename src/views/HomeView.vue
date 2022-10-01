@@ -2,10 +2,14 @@
   <main class="container text-white">
     <div class="pt-4 mb-8 relative">
       <!-- animate-[spin_100s_linear_infinite] -->
-      <input type="text" v-model="searchQuery" @input="getSearchResults" placeholder="搜索城市"
+      <input v-if="lang=='zh-cn'" type="text" v-model="searchQuery" @input="getSearchResults" placeholder="搜索城市"
+        class="z-1 py-2 px-1 w-full bg-transparent placeholder-color-white placeholder-opacity-25 border-b border-weather-secondary focus:outline-none focus:shadow-[0px_1px_0_0_#004E71] hover:shadow-[0px_1px_0_0_#004E71]" />
+      <input v-if="lang=='en-us'" type="text" v-model="searchQuery" @input="getSearchResults"
+        placeholder="Search for a city or state."
         class="z-1 py-2 px-1 w-full bg-transparent placeholder-color-white placeholder-opacity-25 border-b border-weather-secondary focus:outline-none focus:shadow-[0px_1px_0_0_#004E71] hover:shadow-[0px_1px_0_0_#004E71]" />
       <ul class="absolute z-10 bg-weather-secondary text-white w-full shadow-md py-2 px-1" v-if="mapboxSearchResults">
-        <p v-if="mapboxSearchResults.length === 0">没有搜到结果，请重试。</p>
+        <p v-if="mapboxSearchResults.length === 0 && lang=='zh-cn'">没有搜到结果，请重试。</p>
+        <p v-if="mapboxSearchResults.length === 0 && lang=='en-us'">No search results, plase retry.</p>
         <div v-else>
           <li v-for="searchResult in mapboxSearchResults" :key="searchResult.id"
             class="py-2 cursor-pointer hover:bg-weather-tertiary" @click="previewCity(searchResult)">
@@ -18,7 +22,8 @@
         <CityList />
         <template #fallback>
           <div class="text-white p-3 bg-weather-secondary w-full text-center">
-            <p>加载中...</p>
+            <p v-if="lang=='zh-cn'">加载中...</p>
+            <p v-if="lang=='en-us'">Loading...</p>
           </div>
         </template>
       </Suspense>
@@ -33,6 +38,7 @@ import { useRouter } from "vue-router";
 import CityList from "../components/CityList.vue";
 import { draw_canvas } from "../assets/floatingIcons.js";
 
+let lang = localStorage.getItem('lang');
 // 搜索结果对应到预览城市，传入经纬度
 const router = useRouter();
 const previewCity = (searchResult) => {
@@ -89,9 +95,16 @@ const getSearchResults = () => {
   clearTimeout(queryTimeout.value);
   queryTimeout.value = setTimeout(async () => {
     if (searchQuery.value !== "") {
-      const result = await axios.get(
-        `https://api.mapbox.com/geocoding/v5/mapbox.places/${searchQuery.value}.json?access_token=${mapboxAPIKey}&types=place&language=zh-Hans`
-      );
+      let result;
+      if (lang == 'zh-cn') {
+        result = await axios.get(
+          `https://api.mapbox.com/geocoding/v5/mapbox.places/${searchQuery.value}.json?access_token=${mapboxAPIKey}&types=place&language=zh-Hans`
+        );
+      } else {
+        result = await axios.get(
+          `https://api.mapbox.com/geocoding/v5/mapbox.places/${searchQuery.value}.json?access_token=${mapboxAPIKey}&types=place`
+        );
+      }
       mapboxSearchResults.value = result.data.features;
       return;
     }

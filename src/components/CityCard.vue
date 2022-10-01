@@ -5,22 +5,31 @@
             <h3>{{city.state}}</h3>
         </div>
         <div class="flex flex-col gap-2">
-            <p class="text-3xl self-end">
-                {{Math.round((city.weather.main.temp-32)/1.8)}}&degC
+            <p v-if="units=='metric'" class="text-3xl self-end">
+                {{Math.round(city.weather.main.temp)}}&degC
+            </p>
+            <p v-if="units=='imperial'" class="text-3xl self-end">
+                {{Math.round(city.weather.main.temp)}}&degF
             </p>
             <div class="flex gap-2 items-center">
-                <span class="text-xs">
-                    {{Math.round((city.weather.main.temp_min-32)/1.8)}}&degC
+                <span v-if="units=='metric'" class="text-xs">
+                    {{Math.round(city.weather.main.temp_min)}}&degC
+                </span>
+                <span v-if="units=='imperial'" class="text-xs">
+                    {{Math.round(city.weather.main.temp_min)}}&degF
                 </span>
                 <span>~</span>
-                <span class="text-xs">
-                    {{Math.round((city.weather.main.temp_max-32)/1.8)}}&degC
+                <span v-if="units=='metric'" class="text-xs">
+                    {{Math.round(city.weather.main.temp_max)}}&degC
+                </span>
+                <span v-if="units=='imperial'" class="text-xs">
+                    {{Math.round(city.weather.main.temp_max)}}&degF
                 </span>
             </div>
         </div>
-        <div class="flex flex-col ml-6 text-center">
+        <div class="flex flex-col ml-6 items-center">
             <img class="w-[48px] h-[48px] transform scale-[1.5]" :src="
-              `http://openweathermap.org/img/wn/${city.weather.weather[0].icon}@2x.png`
+              `https://openweathermap.org/img/wn/${city.weather.weather[0].icon}@2x.png`
             " />
             <span class="text-xs">
                 {{city.weather.weather[0].description}}
@@ -30,6 +39,7 @@
 </template>
 
 <script setup>
+let units = localStorage.getItem('units');
 defineProps({
     city: {
         type: Object,

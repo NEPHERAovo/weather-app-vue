@@ -3,8 +3,9 @@
         <nav class="container flex flex-col sm:flex-row items-center gap-4 text-white py-6">
             <RouterLink :to="{name:'home'}">
                 <div class="flex items-center gap-3">
-                    <img :src="'http://openweathermap.org/img/wn/02d@2x.png'" class="w-8 h-8 transform scale-[1.8]" />
-                    <p class="text-2xl">~ 天气 ~</p>
+                    <img :src="'https://openweathermap.org/img/wn/02d@2x.png'" class="w-8 h-8 transform scale-[1.8]" />
+                    <p v-if="lang=='zh-cn'" class="text-2xl">~ 天气 ~</p>
+                    <p v-if="lang=='en-us'" class="text-2xl">~ Weather ~</p>
                 </div>
             </RouterLink>
 
@@ -13,13 +14,29 @@
                     @click="toggleShow"></i>
                 <i class="fa-solid fa-palette text-xl hover:text-weather-tertiary duration-150 cursor-pointer"
                     @click="changeTheme"></i>
+                <i v-if="lang=='zh-cn'"
+                    class="fa-solid fa-earth-asia text-xl hover:text-weather-tertiary duration-150 cursor-pointer"
+                    @click="changeLang"></i>
+                <i v-if="lang=='en-us'"
+                    class="fa-solid fa-earth-americas text-xl hover:text-weather-tertiary duration-150 cursor-pointer"
+                    @click="changeLang"></i>
+                <i v-if="units=='metric'"
+                    class="fa-solid fa-c text-xl hover:text-weather-tertiary duration-150 cursor-pointer"
+                    @click="changeUnits"></i>
+                <i v-if="units=='imperial'"
+                    class="fa-solid fa-f text-xl hover:text-weather-tertiary duration-150 cursor-pointer"
+                    @click="changeUnits"></i>
             </div>
 
             <Modal :show="show" @close-modal="toggleShow">
                 <div class="text-black">
-                    <h1 class="text-2xl font-bold">关于</h1>
+                    <h1 v-if="lang=='zh-cn'" class="text-2xl font-bold">关于</h1>
+                    <h1 v-if="lang=='en-us'" class="text-2xl font-bold">About</h1>
                     <br />
-                    <p class="text-lg">使用OpenWeatherMap API获取天气/Mapbox API获取地区的一个小demo.</p>
+                    <p v-if="lang=='zh-cn'" class="text-lg">使用OpenWeatherMap API获取天气/Mapbox API获取地区的一个小demo.</p>
+                    <p v-if="lang=='en-us'" class="text-lg">A demo using OpenWeatherMap API to get weather info /
+                        Mapbox
+                        API to get locations.</p>
                     <br />
                     <p class="text-lg">Reference - The Net Ninja / Youtube</p>
                 </div>
@@ -39,6 +56,7 @@ const toggleShow = () => {
     show.value = !show.value;
 };
 
+// 主题
 function changeThemeViaIndex(index) {
     if (index == 0) {
         document.documentElement.style.setProperty('--primary-color', '#2c9678');
@@ -75,5 +93,39 @@ if (!index) {
     localStorage.setItem('themeIndex', index);
 } else {
     changeThemeViaIndex(index);
+}
+
+// 语言
+let lang = localStorage.getItem('lang');
+if (!lang) {
+    lang = 'zh-cn';
+    localStorage.setItem('lang', lang);
+}
+
+const changeLang = () => {
+    if (lang == 'zh-cn') {
+        lang = 'en-us';
+    } else {
+        lang = 'zh-cn';
+    }
+    localStorage.setItem('lang', lang);
+    window.location.reload();
+}
+
+// 单位
+let units = localStorage.getItem('units');
+if (!units) {
+    units = 'metric';
+    localStorage.setItem('units', units);
+}
+
+const changeUnits = () => {
+    if (units == 'metric') {
+        units = 'imperial';
+    } else {
+        units = 'metric';
+    }
+    localStorage.setItem('units', units);
+    window.location.reload();
 }
 </script>
