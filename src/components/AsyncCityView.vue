@@ -152,13 +152,13 @@
                 </div>
             </div>
         </div>
-
         <hr class="border-white border-opacity-10 border w-full" />
 
         <div v-if="!route.query.preview" class="flex py-8 text-white cursor-pointer duration-150 hover:text-red-500"
             @click="removeCity">
             <i class="fa-solid fa-trash -can"></i>
         </div>
+
     </div>
 </template>
 
