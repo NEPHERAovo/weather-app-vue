@@ -47,7 +47,7 @@
 
 <script setup>
 import { ref } from "vue";
-import { RouterLink, useRoute, useRouter } from "vue-router";
+import { RouterLink } from "vue-router";
 import Modal from "./modal.vue";
 
 // 显示关于信息
